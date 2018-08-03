@@ -1,4 +1,4 @@
-# High quality HEP distribution
+# High quality HEP plotting
 
 This code allows to produce, in a very flexible way, publication quality HEP distributions
 based on ROOT histograms.
