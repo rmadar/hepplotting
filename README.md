@@ -8,5 +8,9 @@ based on ROOT histograms.
 ```
 git clone https://github.com/rmadar/hepplotting
 cd hepplotting
-pip install -e . -user
+pip install -e . --user
 ```
+## Dependencies
+
+  + ROOT
+  + python 2.7 for now
