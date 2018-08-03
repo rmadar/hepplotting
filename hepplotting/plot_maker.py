@@ -236,7 +236,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   cwidth,chigh=1000,800
   if plot_ratio: cwidth,chigh=900,800   
   if can_ratio:  cwidth,chigh=int(cwidth/can_ratio),chigh
-  canv = ROOT.TCanvas('canv','canv',cwidth,chigh)
+  canv = ROOT.TCanvas(plot_name,plot_name,cwidth,chigh)
   ROOT.SetOwnership(canv, False) # see http://root.cern.ch/phpBB3/viewtopic.php?t=9786  
 
   if plot_ratio:
