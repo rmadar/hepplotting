@@ -10,12 +10,16 @@ git clone https://github.com/rmadar/hepplotting
 cd hepplotting
 pip install -e . --user
 ```
-## Dependencies
+
+
+## Technical comments
+
+### Dependencies
 
   + ROOT
   
 
-## Comments
+### Comments
 
 The notebook example doesn't seem to work well and all setup. Several minor features are not working properly
   + the magic command `autoreload` doesn't work (nothing to do with this pacakge)
