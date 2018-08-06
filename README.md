@@ -18,7 +18,7 @@ pip install -e . --user
 1. Histograms for every processes and data, and total histogram (for the uncertainty)
 2. Legend names and color definitions for every background
 3. Possibly every systematic variations to be passed through the total histogram
-(after appropriate combination across systematics)
+(after appropriate combination across systematics, which is not performed by this tool)
 
 ### 2.2 Simplest call
 
@@ -37,6 +37,7 @@ A concrete example can be found in [this notebook](example/example.ipynb) or [th
 which produce each this plot:
 ![distribution](example/plots/Example_plot_Internal_reduced.png)
 
+**Warning** if you want to use the notebook, please consider reading [this section](#known-issues).
 
 
 ## Technical comments
@@ -46,7 +47,7 @@ which produce each this plot:
   + ROOT
   
 
-### Known issues
+### Known issues {#known-issues}
 
 The notebook example doesn't seem to work well and all setup. Several minor features are not working properly
   + the magic command `autoreload` doesn't work (nothing to do with this pacakge)
