@@ -72,7 +72,7 @@ which is often required during the approval process of a publication.
 
 **Canvas properties**
 
-   + `plot_ratio` [boolean] to plot or not the ratio panel
+   + `plot_ratio [boolean]` to plot or not the ratio panel
    + `is_logy` [boolean] to plot in log scale or not
    + `can_ratio` [float] specify the canvas size such as width=900/ratio and height=800
    + `leg_pos` [list of float] specify the legend position via bottom left (x1,y1) and top right (x2,y2) using [x1,y1,x2,y2]
