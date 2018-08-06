@@ -71,13 +71,17 @@ which is often required during the approval process of a publication.
    + `xlabel_offset` *[float]* offset of the x-axis bin labels
 
 
+**Legend propetries**
+
+   + `leg_pos` *[list of float]* specify the legend position via bottom left (x1,y1) and top right (x2,y2) using `[x1,y1,x2,y2]`
+   + `unc_leg` *[string]* to tune the name of uncertainty (eg. stat-only)
+
+
 **Canvas properties**
 
    + `plot_ratio` *[boolean]* to plot or not the ratio panel
    + `is_logy` *[boolean]* to plot in log scale or not
    + `can_ratio` *[float]* specify the canvas size such as `width=900/ratio` and `height=800`
-   + `leg_pos` *[list of float]* specify the legend position via bottom left (x1,y1) and top right (x2,y2) using `[x1,y1,x2,y2]`
-   + `unc_leg` *[string]* to tune the name of uncertainty (eg. stat-only)
    + `plot_labels` *[list of string]* given the labels printed below ATLAS and Lumi
    + `atlas_label` *[string]* is 'Internal' by default but can be 'ATLAS', 'Preliminary', 'Simulation'
 
@@ -92,7 +96,8 @@ which is often required during the approval process of a publication.
 
 ### 3.1 To-do list
 
-- [ ] Add the possibility of having several (possibly horizontal) legends
+- [ ] Add the possibility of having several legends with the position/number
+if entry for each
 - [ ] Add sanity checks for the number of bins of each histograms and the
 size of the `bin_label` list
 
