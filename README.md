@@ -33,8 +33,9 @@ where:
   + `hTot` is the total histogram with possibly larger uncertainty (to account for systematics)
   + `hData` is the data histograms
 
-A concrete example can be found in [SimpleExample.py](SimpleExample.py) which produces this plot:
-![distribution](plots/Example_plot_Internal_reduced.png)
+A concrete example can be found in [this notebook](example/example.ipynb) or [this simple script](example/example.py)
+which produce each this plot:
+![distribution](example/plots/Example_plot_Internal_reduced.png)
 
 
 
@@ -49,5 +50,5 @@ A concrete example can be found in [SimpleExample.py](SimpleExample.py) which pr
 
 The notebook example doesn't seem to work well and all setup. Several minor features are not working properly
   + the magic command `autoreload` doesn't work (nothing to do with this pacakge)
-  + the displayed canvas is not correct (should be connected to ROOT-related tool versions). This affect the 
-  use of the tool within a notebooks, only.
+  + in the notebook, the displayed canvas is not correct (should be connected to ROOT-related tool versions). This affect the 
+  use of the tool *within a notebooks* only*.
