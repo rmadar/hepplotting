@@ -34,7 +34,7 @@ where:
   + `hData` is the data histograms
 
 A concrete example can be found in [this notebook](example/example.ipynb) (consider reading the
-[known issues section](#32-known-issues) for notebook use) or [this simple script](example/example.py)
+[known issues section](#33-known-issues) for notebook use) or [this simple script](example/example.py)
 which produce each this plot:
 
 ![Example of distribution](example/plots/Example_plot_Internal_reduced.png)
@@ -84,20 +84,29 @@ which is often required during the approval process of a publication.
 
 **Output properties**
 
-   + `plotdir` [string] is a directory where the plots will be stored (default: 'plots')
+   + `plotdir` *[string]* is a directory where the plots will be stored (default is `plots`)
 
 
 
 ## 3 Technical comments
 
-### 3.1 Dependencies
+### 3.1 To-do list
+
+- [ ] Add the possibility of having several (possibly horizontal) legends
+- [ ] Add sanity checks for the number of bins of each histograms and the
+size of the `bin_label` list
+
+
+### 3.2 Dependencies
 
   + ROOT
   
 
-### 3.2 Known issues
+
+### 3.3 Known issues
 
 The notebook example doesn't seem to work well and all setup. Several minor features are not working properly
+
   + the magic command `autoreload` doesn't work (nothing to do with this pacakge)
   + in the notebook, the displayed canvas is not correct (should be connected to ROOT-related tool versions). This affect the 
   use of the tool *within a notebooks* only*.
