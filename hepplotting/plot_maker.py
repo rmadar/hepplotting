@@ -382,4 +382,4 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   canv.SaveAs(full_path_plot+'_{}.pdf' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.png' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.root'.format(atlas_label))
-  return
+  return 
