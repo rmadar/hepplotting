@@ -34,7 +34,7 @@ where:
   + `hData` is the data histograms
 
 A concrete example can be found in [this notebook](example/example.ipynb) (consider reading the
-[known issues section](#known-issues) for notebook use) or [this simple script](example/example.py)
+[known issues section](#3-2-known-issues) for notebook use) or [this simple script](example/example.py)
 which produce each this plot:
 
 ![Example of distribution](example/plots/Example_plot_Internal_reduced.png)
@@ -72,13 +72,13 @@ which is often required during the approval process of a publication.
 
 **Canvas properties**
 
-   + `plot_ratio [boolean]` to plot or not the ratio panel
-   + `is_logy` [boolean] to plot in log scale or not
-   + `can_ratio` [float] specify the canvas size such as width=900/ratio and height=800
-   + `leg_pos` [list of float] specify the legend position via bottom left (x1,y1) and top right (x2,y2) using [x1,y1,x2,y2]
-   + `unc_leg` [string] to tune the name of uncertainty (eg. stat-only)
-   + `plot_labels` [list of string] given the labels printed below ATLAS and Lumi
-   + `atlas_label` [string] is 'Internal' by default but can be 'ATLAS', 'Preliminary', 'Simulation'
+   + `plot_ratio` [*boolean*] to plot or not the ratio panel
+   + `is_logy` [*boolean*] to plot in log scale or not
+   + `can_ratio` [*float*] specify the canvas size such as width=900/ratio and height=800
+   + `leg_pos` [*list of float*] specify the legend position via bottom left (x1,y1) and top right (x2,y2) using [x1,y1,x2,y2]
+   + `unc_leg` [*string*] to tune the name of uncertainty (eg. stat-only)
+   + `plot_labels` [*list of string*] given the labels printed below ATLAS and Lumi
+   + `atlas_label` [*string*] is 'Internal' by default but can be 'ATLAS', 'Preliminary', 'Simulation'
 
 
 **Output properties**
