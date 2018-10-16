@@ -1,4 +1,5 @@
 import ROOT 
+ROOT.gROOT.ProcessLine( 'gErrorIgnoreLevel = 2001;')
 import numpy  as np
 import pandas as pd
 import math
@@ -12,6 +13,7 @@ ROOT.gStyle.SetOptTitle(0)
 
 def ATLASLabel(x, y, text, withRatio=True, rsize=None):
   l=ROOT.TLatex()
+  ROOT.SetOwnership(l,False)
   l.SetNDC()
   delx,size=0.132,0.052
   if rsize: delx*=rsize   # To account for not 800x700 canvas
@@ -24,6 +26,7 @@ def ATLASLabel(x, y, text, withRatio=True, rsize=None):
   
 def stampText(text, x, y, size):
   t = ROOT.TLatex()
+  ROOT.SetOwnership(t,False)
   t.SetNDC()
   t.SetTextFont(42)
   t.SetTextColor(1)
@@ -108,6 +111,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
 
   - Key-word arguments:
    . plotdir [string] is a directory where the plots will be stored (default: 'plots')
+   . lumi [float] is the integrated luminosity (default: 1/fb)
    . xtitle [string] is x-axis title
    . ytitle [string] is y-axis title
    . dictSig [dict {sigName:[TH1,color,norm,legName]}] is dictionnary with name [string], histo [TH1], 
@@ -122,7 +126,9 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
    . ymax [float] higher y-axis value
    . r_ymin [float] lower y-axis value on the ratio plot
    . r_ymax [float] higher y-axis value on the ratio plot
+   . canvas [TCanvas] on which the plot will be made
    . can_ratio [float] specify the canvas size such as width=900/ratio and height=800
+   . can_scale [float] scale the whole canvas without changin its ratio
    . leg_pos [list of float] specify the legend position via bottom left (x1,y1) 
      and top right (x2,y2) using [x1,y1,x2,y2]
    . m_size [float] is the marker size for data
@@ -135,13 +141,15 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
    . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
   '''
   
-  plotdir,dictSig,xtitle_arg,ytitle_arg='plots',None,None,None
+  plotdir,dictSig,sig_line_style,xtitle_arg,ytitle_arg,lumi='plots',None,1,None,None,1.0
   ymin_arg,ymax_arg,xmin_arg,xmax_arg=None,None,None,None
   is_logy,bin_label,xlabel_size,xlabel_offset,xticksInt=None,None,None,None,False
-  r_ymin,r_ymax,can_ratio,m_size,plot_labels,leg_pos=None,None,None,None,None,None
-  error_fill,error_alpha,histo_border=3356,0.3,0
+  r_ymin,r_ymax,can_ratio,can_scale,m_size,plot_labels,leg_pos=None,None,None,1.0,None,None,None
+  canvas,error_fill,error_alpha,histo_border=None,3356,0.3,0
   plot_ratio,atlas_label,unc_leg=True,'Internal',None
+  if 'lumi'          in kwargs: lumi=kwargs['lumi']
   if 'dictSig'       in kwargs: dictSig=kwargs['dictSig']
+  if 'sig_line_style'in kwargs: sig_line_style=kwargs['sig_line_style']
   if 'plotdir'       in kwargs: plotdir=kwargs['plotdir']
   if 'xtitle'        in kwargs: xtitle_arg=kwargs['xtitle']
   if 'ytitle'        in kwargs: ytitle_arg=kwargs['ytitle']
@@ -156,7 +164,9 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   if 'ymax'          in kwargs: ymax_arg=kwargs['ymax']
   if 'r_ymin'        in kwargs: r_ymin=kwargs['r_ymin']
   if 'r_ymax'        in kwargs: r_ymax=kwargs['r_ymax']
+  if 'canvas'        in kwargs: canvas=kwargs['canvas']
   if 'can_ratio'     in kwargs: can_ratio=kwargs['can_ratio']
+  if 'can_scale'     in kwargs: can_scale=kwargs['can_scale']
   if 'leg_pos'       in kwargs: leg_pos=kwargs['leg_pos']
   if 'm_size'        in kwargs: m_size=kwargs['m_size']
   if 'plot_labels'   in kwargs: plot_labels=kwargs['plot_labels']
@@ -176,28 +186,35 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   if dictSig:
     for n,sig in dictSig.items():
       h,color,norm,legName=sig
+      ROOT.SetOwnership(h,False)
+      h.SetTitle('')
       h.SetFillColor(0)
       h.SetLineColor(color)
       h.SetLineWidth(4)
-      h.SetLineStyle(2)
+      h.SetLineStyle(sig_line_style)
       h.SetFillColor(0)
       if norm: h.Scale(norm/h.Integral(-999,999))
       h.SetFillColor(0)
   for b in bkg_name:
+    ROOT.SetOwnership(hBkg[b],False)
+    hBkg[b].SetTitle('')
     hBkg[b].SetLineWidth(histo_border)
     hBkg[b].SetMarkerSize(0)
     hBkg[b].SetFillColor(bkg_color[b])
     hBkg[b].SetLineColorAlpha(1,0.3)
     hBkg[b].SetMarkerColor(bkg_color[b])
-    
+
+  ROOT.SetOwnership(hTot,False)
   hTot.SetLineWidth(0)
     
   # Preparing the stack
   hstack = ROOT.THStack()
+  ROOT.SetOwnership(hstack,False)
   for b in bkg_name[::-1]:
     hstack.Add(hBkg[b])
     
   # Manage axis scaling and label involving numbers
+  ROOT.SetOwnership(hData,False)
   nbins=hData.GetNbinsX()
   xmin=hData.GetBinLowEdge(1)
   xmax=hData.GetBinLowEdge(nbins)+hData.GetBinWidth(nbins)    
@@ -233,11 +250,16 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   hData.GetXaxis().SetRangeUser(xmin,xmax)
   hTot.GetXaxis().SetRangeUser(xmin,xmax)
 
-  cwidth,chigh=1000,800
-  if plot_ratio: cwidth,chigh=900,800   
+  cwidth,chigh=int(1000*can_scale),int(800*can_scale)
+  if plot_ratio: cwidth,chigh=int(900*can_scale),int(800*can_scale)   
   if can_ratio:  cwidth,chigh=int(cwidth/can_ratio),chigh
-  canv = ROOT.TCanvas(plot_name,plot_name,cwidth,chigh)
+  if canvas:
+    canv=canvas
+    canv.SetWindowSize(cwidth,chigh)
+  else:
+    canv = ROOT.TCanvas(plot_name,plot_name,cwidth,chigh)
   ROOT.SetOwnership(canv, False) # see http://root.cern.ch/phpBB3/viewtopic.php?t=9786  
+  canv.SetTitle('')
 
   if plot_ratio:
     padhigh = ROOT.TPad('padhigh','padhigh',0.,0.3,1.,1.0,0,0,0)
@@ -265,6 +287,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   else         : x1,y1,x2,y2,textsize=0.61,0.5,0.98,0.93,0.038
   if leg_pos   : x1,y1,x2,y2=leg_pos
   leg = ROOT.TLegend(x1,y1,x2,y2)
+  ROOT.SetOwnership(leg,False)
   leg.SetTextFont(42)
   leg.SetFillStyle(0)
   leg.SetBorderSize(0)
@@ -281,8 +304,8 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   else      : leg.AddEntry(hTot,'Total bkg unc.', 'f')
     
   hData.SetMarkerStyle(20)
-  if plot_ratio: hData.SetMarkerSize(1.7)
-  else         : hData.SetMarkerSize(2.0)
+  if plot_ratio: hData.SetMarkerSize(1.7*can_scale)
+  else         : hData.SetMarkerSize(2.0*can_scale)
   if m_size: hData.SetMarkerSize(m_size)
   hData.SetLineWidth(3)
   hTot.SetFillColorAlpha(1,error_alpha)
@@ -323,7 +346,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   else         : x0,y0,dy,txt_size=0.19,0.87,0.06,0.043
   if atlas_label=='ATLAS': ATLASLabel(x0,y0,'',plot_ratio,can_ratio)
   else                   : ATLASLabel(x0,y0,atlas_label,plot_ratio,can_ratio)
-  stampText('#sqrt{s} = 13 TeV, 36.1 fb^{-1}',x0,y0-dy,txt_size)
+  stampText('#sqrt{s} = 13 TeV, '+'{:.1f} '.format(lumi)+'fb^{-1}',x0,y0-dy,txt_size)
   if plot_labels:
     for i,l in enumerate(plot_labels):
       stampText(l,x0,y0-(i+2)*dy,txt_size)
@@ -332,9 +355,11 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
 
   if plot_ratio:
     hdataovermc = hData.Clone()
+    ROOT.SetOwnership(hdataovermc,False)
     hdataovermc.Divide(hTot)
     hdataoverm = remove_0entry_data(hdataovermc,0.01)
     hmc_err    = hTot.Clone("hmc_err")
+    ROOT.SetOwnership(hmc_err,False)
     for ii in xrange(1,hmc_err.GetNbinsX()+1):
       if hmc_err.GetBinContent(ii)<0.001 :
         hmc_err.SetBinError(ii,0.)
@@ -366,6 +391,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
     hmc_err.Draw("E2")
     hdataovermc.Draw("E0 same")
     cline = ROOT.TF1('cline','1',-100,5000)
+    ROOT.SetOwnership(cline, False)
     cline.SetLineWidth(1)
     cline.Draw('same')
 
@@ -379,6 +405,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
 
   canv.Update()
   canv.Draw()  
+  canv.Update()
   canv.SaveAs(full_path_plot+'_{}.pdf' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.png' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.root'.format(atlas_label))
