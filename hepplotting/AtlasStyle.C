@@ -16,9 +16,11 @@ void SetAtlasStyle (){
   if ( atlasStyle==0 ) atlasStyle = AtlasStyle();
   gROOT->SetStyle("ATLAS");
   gROOT->ForceStyle();
+
 }
 
 TStyle* AtlasStyle(){
+
   TStyle *atlasStyle = new TStyle("ATLAS","Atlas style");
 
   // use plain black on white colors
@@ -30,8 +32,7 @@ TStyle* AtlasStyle(){
   atlasStyle->SetPadBorderMode(icol);
   atlasStyle->SetPadColor(icol);
   atlasStyle->SetStatColor(icol);
-  //atlasStyle->SetFillColor(icol); // don't use: white fill color for *all* objects
-
+  
   // set the paper & margin sizes
   atlasStyle->SetPaperSize(20,26);
 
@@ -44,7 +45,7 @@ TStyle* AtlasStyle(){
   // set title offsets (for axis label)
   atlasStyle->SetTitleXOffset(1.4);
   atlasStyle->SetTitleYOffset(1.4);
-
+    
   // use large fonts
   //Int_t font=72; // Helvetica italics
   Int_t font=42; // Helvetica
@@ -72,8 +73,8 @@ TStyle* AtlasStyle(){
   atlasStyle->SetHistLineWidth(2.);
   atlasStyle->SetLineStyleString(2,"[12 12]"); // postscript dashes
 
-  // get rid of X error bars
-  //atlasStyle->SetErrorX(0.001);
+  // get the X error bars to have area for error
+  atlasStyle->SetErrorX(0.5);
   // get rid of error bar caps
   atlasStyle->SetEndErrorSize(0.);
 
@@ -87,7 +88,7 @@ TStyle* AtlasStyle(){
   // put tick marks on top and RHS of plots
   atlasStyle->SetPadTickX(1);
   atlasStyle->SetPadTickY(1);
-
+  
   return atlasStyle;
 
 }

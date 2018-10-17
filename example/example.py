@@ -21,8 +21,8 @@ bkg_color = {
 # ======= CREATE HISTOGRAMS TO RUN THE EXAMPLE ======
 def get_random_histo(name):
     global counter
-    h=ROOT.TH1F(name,name,50,-5,10)
-    h.FillRandom('gaus')
+    h=ROOT.TH1F(name,name,25,-5,10)
+    h.FillRandom('gaus',250)
     h.SetName(h.GetName()+'_tmp{}'.format(counter))
     counter+=1
     return h
@@ -34,6 +34,6 @@ hTot    = plt.sum_histograms( [v[0] for v in dictBkg.values()] )
 
 
 plt.make_nice_canvas(dictBkg,hTot,hData,plot_name='Example_plot',
-                    ytitle='Probability Density Function',
-                    xtitle='Random variable',plot_ratio=False,
+                     ytitle='Probability Density Function',
+                     xtitle='Random variable',plot_ratio=True,ymax=300
                     )

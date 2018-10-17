@@ -1,5 +1,5 @@
 import ROOT 
-ROOT.gROOT.ProcessLine( 'gErrorIgnoreLevel = 2001;')
+#ROOT.gROOT.ProcessLine( 'gErrorIgnoreLevel = 2001;')
 import numpy  as np
 import pandas as pd
 import math
@@ -212,7 +212,7 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   ROOT.SetOwnership(hstack,False)
   for b in bkg_name[::-1]:
     hstack.Add(hBkg[b])
-    
+  
   # Manage axis scaling and label involving numbers
   ROOT.SetOwnership(hData,False)
   nbins=hData.GetNbinsX()
@@ -321,11 +321,11 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
   else         : hTot.GetYaxis().SetTitleSize(0.045)
   hTot.GetYaxis().SetLabelSize(0.045)
   if xticksInt: hTot.GetXaxis().SetNdivisions(hTot.GetNbinsX(),0,0,True);
-  hTot.Draw("E2")
-  hstack.Draw("hist same")
-  hData.Draw("esame")
-  hTot.Draw("E2same")
-  leg.Draw("same")
+  hTot.Draw('E2')
+  hstack.Draw('hist same')
+  hData.Draw('Esame')
+  hTot.Draw('E2same')
+  leg.Draw('same')
   if dictSig:
     for n,sig in dictSig.items():
       sig[0].Draw("hist same")
