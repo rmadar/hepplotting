@@ -79,6 +79,7 @@ which is often required during the approval process of a publication.
 
 **Canvas properties**
 
+   + `canvas` *[TCanvas]* on which to perform the plots
    + `plot_ratio` *[boolean]* to plot or not the ratio panel
    + `is_logy` *[boolean]* to plot in log scale or not
    + `can_ratio` *[float]* specify the canvas size such as `width=900/ratio` and `height=800`

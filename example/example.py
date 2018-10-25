@@ -21,7 +21,7 @@ bkg_color = {
 # ======= CREATE HISTOGRAMS TO RUN THE EXAMPLE ======
 def get_random_histo(name):
     global counter
-    h=ROOT.TH1F(name,name,25,-5,10)
+    h=ROOT.TH1F(name,name,30,-5,10)
     h.FillRandom('gaus',250)
     h.SetName(h.GetName()+'_tmp{}'.format(counter))
     counter+=1
