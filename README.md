@@ -82,6 +82,7 @@ which is often required during the approval process of a publication.
    + `plot_ratio` *[boolean]* to plot or not the ratio panel
    + `is_logy` *[boolean]* to plot in log scale or not
    + `can_ratio` *[float]* specify the canvas size such as `width=900/ratio` and `height=800`
+   + `can_scale` *[float]* specify the canvas size without ratio change such as `width=900*scale` and `height=800*scale`
    + `plot_labels` *[list of string]* given the labels printed below ATLAS and Lumi
    + `atlas_label` *[string]* is 'Internal' by default but can be 'ATLAS', 'Preliminary', 'Simulation'
 
