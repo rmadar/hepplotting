@@ -258,7 +258,8 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
     canv.SetWindowSize(cwidth,chigh)
   else:
     canv = ROOT.TCanvas(plot_name,plot_name,cwidth,chigh)
-  ROOT.SetOwnership(canv, False) # see http://root.cern.ch/phpBB3/viewtopic.php?t=9786  
+
+  ROOT.SetOwnership(canv, False)
   canv.SetTitle('')
 
   if plot_ratio:
@@ -404,9 +405,9 @@ def make_nice_canvas(dictBkg,hTot,hData,plot_name,**kwargs):
     full_path_plot=plot_name
 
   canv.Update()
-  canv.Draw()  
-  canv.Update()
+  #canv.Draw()  
+  #canv.Update()
   canv.SaveAs(full_path_plot+'_{}.pdf' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.png' .format(atlas_label))
   canv.SaveAs(full_path_plot+'_{}.root'.format(atlas_label))
-  return 
+  return canv
