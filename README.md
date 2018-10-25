@@ -33,8 +33,7 @@ where:
   + `hTot` is the total histogram with possibly larger uncertainty (to account for systematics)
   + `hData` is the data histograms
 
-A concrete example can be found in [this notebook](example/example.ipynb) (consider reading the
-[known issues section](#33-known-issues) for notebook use) or [this simple script](example/example.py)
+A concrete example can be found in [this notebook](example/example.ipynb) or [this simple script](example/example.py)
 which produce each this plot:
 
 ![Example of distribution](example/plots/Example_plot_Internal_reduced.png)
@@ -108,12 +107,3 @@ size of the `bin_label` list
 
   + ROOT
   
-
-
-### 3.3 Known issues
-
-The notebook example doesn't seem to work well and all setup. Several minor features are not working properly
-
-  + the magic command `autoreload` doesn't work (nothing to do with this pacakge)
-  + in the notebook, the displayed canvas is not correct (should be connected to ROOT-related tool versions). This affect the 
-  use of the tool *within a notebooks* only*.
