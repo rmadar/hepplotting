@@ -28,12 +28,14 @@ def get_random_histo(name):
     return h
 
 dictBkg = {b:[get_random_histo(b),bkg_color[b],bkg_legname[b]] for b in bkg_name}
+dictSig = {'s': [get_random_histo('s'), ROOT.kRed+1, 20, 'Madaron (m_{#xi}=1 MeV)']}
 hData   = plt.sum_histograms([get_random_histo('Data') for i in range(0,3)])
 hTot    = plt.sum_histograms( [v[0] for v in dictBkg.values()] )
 # ==================================================
 
 
-plt.make_nice_canvas(dictBkg,hTot,hData,plot_name='Example_plot',
+plt.make_nice_canvas(dictBkg,hTot,hData,plot_name='Example_plot', dictSig=dictSig,
                      ytitle='Probability Density Function',
-                     xtitle='Random variable',plot_ratio=True,ymax=300
+                     xtitle='Random variable',plot_ratio=True,
+                     ymax=300, ratio_type='SoverB', r_ymin=0, r_ymax=0.5
                     )
