@@ -431,6 +431,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             if not dictSig:
                 raise NameError('ratio_type \'SoverB\' is not supported when no signal is specified')
             hmc_err = hTot.Clone("hmc_err")
+            ROOT.SetOwnership(hmc_err, False)
             hsig, color, norm, legName = list(dictSig.values())[0]
             hmc_err.SetFillStyle(0)
             hmc_err.SetLineColor(color)
@@ -438,12 +439,12 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             for ii in range(1, hmc_err.GetNbinsX()+1):
                 s, b = hsig.GetBinContent(ii), hmc_err.GetBinContent(ii)
                 SoverB = s/np.sqrt(b)
-                if np.isnan(SoverB):
+                if np.isnan(SoverB) or np.isinf(SoverB):
                     hmc_err.SetBinContent(ii, 0.0)
                 else:
                     hmc_err.SetBinContent(ii, s/np.sqrt(b))
                 hmc_err.SetMinimum(0.0)
-                hmc_err.SetMaximum(2.0)
+                hmc_err.SetMaximum(1.5)
                 hmc_err.GetYaxis().SetTitle('S/#sqrt{B}')
                 cline = ROOT.TF1('cline', '3', -100, 5000)
                 ROOT.SetOwnership(cline, False)
@@ -479,32 +480,33 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)
             raise NameError(err)
 
-    padlow.cd()
-    if r_ymin:
-        hmc_err.SetMinimum(r_ymin)
-    if r_ymax:
-        hmc_err.SetMaximum(r_ymax)
-    hmc_err.GetXaxis().SetTitleSize(0.15)
-    hmc_err.GetXaxis().SetTitleOffset(0.9)
-    hmc_err.GetYaxis().SetTitleSize(0.12)
-    hmc_err.GetYaxis().SetTitleOffset(0.4)
-    hmc_err.GetXaxis().SetLabelSize(0.12)
-    if xlabel_size:
-        hmc_err.GetXaxis().SetLabelSize(xlabel_size)
-    if xlabel_offset:
-        hmc_err.GetXaxis().SetLabelOffset(xlabel_offset)
-    hmc_err.GetYaxis().SetLabelSize(0.12)
-    hmc_err.GetYaxis().SetNdivisions(504)
-    if ratio_type == 'ratio':
-        hmc_err.Draw('E2')
-        hdataovermc.Draw('E0 same')
-    elif ratio_type == 'SoverB':
-        hmc_err.Draw('hist')
-    else:
-        err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)
-        raise NameError(err)
-    cline.Draw('same')
+        padlow.cd()
+        if r_ymin:
+            hmc_err.SetMinimum(r_ymin)
+        if r_ymax:
+            hmc_err.SetMaximum(r_ymax)
+        hmc_err.GetXaxis().SetTitleSize(0.15)
+        hmc_err.GetXaxis().SetTitleOffset(0.9)
+        hmc_err.GetYaxis().SetTitleSize(0.12)
+        hmc_err.GetYaxis().SetTitleOffset(0.4)
+        hmc_err.GetXaxis().SetLabelSize(0.12)
+        if xlabel_size:
+            hmc_err.GetXaxis().SetLabelSize(xlabel_size)
+        if xlabel_offset:
+            hmc_err.GetXaxis().SetLabelOffset(xlabel_offset)
+        hmc_err.GetYaxis().SetLabelSize(0.12)
+        hmc_err.GetYaxis().SetNdivisions(504)
+        if ratio_type == 'ratio':
+            hmc_err.Draw('E2')
+            hdataovermc.Draw('E0 same')
+        elif ratio_type == 'SoverB':
+            hmc_err.Draw('hist')
+        else:
+            err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)
+            raise NameError(err)
+        cline.Draw('same')
 
+        
     if plotdir:
         import os
         full_path_plot = plotdir+'/'+plot_name
