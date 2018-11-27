@@ -437,7 +437,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             hmc_err.SetLineColor(color)
             hmc_err.SetLineWidth(3)
             for ii in range(1, hmc_err.GetNbinsX()+1):
-                s, b = hsig.GetBinContent(ii), hmc_err.GetBinContent(ii)
+                s, b, berr = hsig.GetBinContent(ii), hmc_err.GetBinContent(ii), hmc_err.GetBinError(ii)
                 SoverB = s/np.sqrt(b)
                 if np.isnan(SoverB) or np.isinf(SoverB):
                     hmc_err.SetBinContent(ii, 0.0)
@@ -487,7 +487,6 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             hmc_err.SetMaximum(r_ymax)
         hmc_err.GetXaxis().SetTitleSize(0.15)
         hmc_err.GetXaxis().SetTitleOffset(0.9)
-        hmc_err.GetYaxis().SetTitleSize(0.12)
         hmc_err.GetYaxis().SetTitleOffset(0.4)
         hmc_err.GetXaxis().SetLabelSize(0.12)
         if xlabel_size:
@@ -497,16 +496,18 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         hmc_err.GetYaxis().SetLabelSize(0.12)
         hmc_err.GetYaxis().SetNdivisions(504)
         if ratio_type == 'ratio':
+            hmc_err.GetYaxis().SetTitleSize(0.12)
             hmc_err.Draw('E2')
             hdataovermc.Draw('E0 same')
         elif ratio_type == 'SoverB':
+            hmc_err.GetYaxis().SetTitleSize(0.12)
             hmc_err.Draw('hist')
         else:
             err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)
             raise NameError(err)
         cline.Draw('same')
 
-        
+
     if plotdir:
         import os
         full_path_plot = plotdir+'/'+plot_name
