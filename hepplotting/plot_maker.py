@@ -148,6 +148,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     . error_alpha [float] is the transparency for the uncertainty band (in [0,1])
     . histo_border [int] is the border size of background histograms in the stacks
     . plot_ratio [boolean] to plot or not the ratio panel
+    . ratio_type [string] to choose what to plot in the bottom plot (\'ratio\' [default], \'SoverB\', \'signif\')
     . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
     '''
 
@@ -427,7 +428,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
 
     if plot_ratio:
 
-        if (ratio_type == 'SoverB'):
+        if (ratio_type == 'SoverB' or ratio_type == 'signif'):
             if not dictSig:
                 raise NameError('ratio_type \'SoverB\' is not supported when no signal is specified')
             hmc_err = hTot.Clone("hmc_err")
@@ -438,14 +439,35 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             hmc_err.SetLineWidth(3)
             for ii in range(1, hmc_err.GetNbinsX()+1):
                 s, b, berr = hsig.GetBinContent(ii), hmc_err.GetBinContent(ii), hmc_err.GetBinError(ii)
-                SoverB = s/np.sqrt(b)
-                if np.isnan(SoverB) or np.isinf(SoverB):
-                    hmc_err.SetBinContent(ii, 0.0)
+                berr2 = berr**2
+                if ratio_type == 'SoverB':
+                    hmc_err.GetYaxis().SetTitle('S/#sqrt{B}')
+                    SoverB = s/np.sqrt(b+berr**2)
+                    if np.isnan(SoverB) or np.isinf(SoverB):
+                        hmc_err.SetBinContent(ii, 0.0)
+                    else:
+                        hmc_err.SetBinContent(ii, SoverB)
+                elif ratio_type == 'signif':
+                    hmc_err.GetYaxis().SetTitle('Z_{A}')
+                    try:
+                        term1 = (s+b)*np.log((s+b)*(b+berr2)/(b**2+(s+b)*berr2))
+                    except ZeroDivisionError:
+                        term1 = 0
+                    try:
+                        term2 = b**2/berr2*np.log(1+berr2*s/b/(b+berr2))
+                    except ZeroDivisionError:
+                        term2 = 0
+                    sig2  = 2*(term1-term2)
+                    if np.isnan(sig2) or np.isinf(sig2) or sig2<0:
+                        hmc_err.SetBinContent(ii, 0.0)
+                    else:
+                        hmc_err.SetBinContent(ii, np.sqrt(sig2))
                 else:
-                    hmc_err.SetBinContent(ii, SoverB)
+                    err = 'ratio_type is only \'SoverB\', \'ratio\' or \'signif\', but not \'{}\''.format(ratio_type)
+                    raise NameError(err)
+
                 hmc_err.SetMinimum(0.0)
                 hmc_err.SetMaximum(1.5)
-                hmc_err.GetYaxis().SetTitle('S/#sqrt{B}')
                 cline = ROOT.TF1('cline', '3', -100, 5000)
                 ROOT.SetOwnership(cline, False)
                 cline.SetLineWidth(1)
@@ -477,7 +499,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             cline.SetLineWidth(1)
 
         else:
-            err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)
+            err = 'ratio_type is only \'SoverB\', \'ratio\' or \'signif\', but not \'{}\''.format(ratio_type)
             raise NameError(err)
 
         padlow.cd()
@@ -487,8 +509,9 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             hmc_err.SetMaximum(r_ymax)
         hmc_err.GetXaxis().SetTitleSize(0.15)
         hmc_err.GetXaxis().SetTitleOffset(0.9)
-        hmc_err.GetYaxis().SetTitleOffset(0.4)
         hmc_err.GetXaxis().SetLabelSize(0.12)
+        hmc_err.GetYaxis().SetTitleOffset(0.4)
+        hmc_err.GetYaxis().SetTitleSize(0.12)
         if xlabel_size:
             hmc_err.GetXaxis().SetLabelSize(xlabel_size)
         if xlabel_offset:
@@ -496,11 +519,9 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         hmc_err.GetYaxis().SetLabelSize(0.12)
         hmc_err.GetYaxis().SetNdivisions(504)
         if ratio_type == 'ratio':
-            hmc_err.GetYaxis().SetTitleSize(0.12)
             hmc_err.Draw('E2')
             hdataovermc.Draw('E0 same')
-        elif ratio_type == 'SoverB':
-            hmc_err.GetYaxis().SetTitleSize(0.12)
+        elif ratio_type == 'SoverB' or ratio_type == 'signif':
             hmc_err.Draw('hist')
         else:
             err = 'ratio_type is only \'SoverB\' or \'ratio\', but not \'{}\''.format(ratio_type)

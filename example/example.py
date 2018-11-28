@@ -37,5 +37,4 @@ hTot    = plt.sum_histograms( [v[0] for v in dictBkg.values()] )
 plt.make_nice_canvas(dictBkg,hTot,hData,plot_name='Example_plot', dictSig=dictSig,
                      ytitle='Probability Density Function',
                      xtitle='Random variable',plot_ratio=True,
-                     ymax=300, ratio_type='SoverB', r_ymin=0, r_ymax=0.5
-                    )
+                     ymax=300, ratio_type='SoverB')
