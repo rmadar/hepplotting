@@ -442,7 +442,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
                 if np.isnan(SoverB) or np.isinf(SoverB):
                     hmc_err.SetBinContent(ii, 0.0)
                 else:
-                    hmc_err.SetBinContent(ii, s/np.sqrt(b))
+                    hmc_err.SetBinContent(ii, SoverB)
                 hmc_err.SetMinimum(0.0)
                 hmc_err.SetMaximum(1.5)
                 hmc_err.GetYaxis().SetTitle('S/#sqrt{B}')
