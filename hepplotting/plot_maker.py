@@ -237,7 +237,10 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             h.SetLineStyle(sig_line_style)
             h.SetFillColor(0)
             if norm:
-                h.Scale(norm/h.Integral(-999, 999))
+                if h.Integral(-999, 999)>0:
+                    h.Scale(norm/h.Integral(-999, 999))
+                else:
+                    h.Scale(0.)
             h.SetFillColor(0)
     for b in bkg_name:
         ROOT.SetOwnership(hBkg[b], False)
