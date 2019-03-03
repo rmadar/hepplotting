@@ -111,7 +111,7 @@ def remove_0entry_data(hdata, th=0.5):
 
 def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     '''
-    Produce a canvas with stacked histogram for background, data and ratio plots.
+    Produce a canvas with stacked histograms for background, data and ratio plots.
 
 
     Required arguments
@@ -125,7 +125,9 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     Key-word arguments
     ==================
     . plotdir [string] is a directory where the plots will be stored (default: 'plots')
-    . lumi [float] is the integrated luminosity (default: 1/fb)
+
+    AXIS properties
+    ---------------
     . xtitle [string] is x-axis title
     . ytitle [string] is y-axis title
     . dictSig [dict {sigName:[TH1,color,norm,legName]}] is dictionnary with name [string], histo [TH1],
@@ -141,21 +143,30 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     . r_ymin [float] lower y-axis value on the ratio plot
     . r_ymax [float] higher y-axis value on the ratio plot
 
+    LEGEND properties
+    -----------------
     . leg_pos [list of float] specify the legend position via bottom left (x1,y1)
      and top right (x2,y2) using [x1,y1,x2,y2]
     . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
     . leg_ncols [int] number of columns used for the legend
-    . leg_put_nevts [bool] to print events yields in the legend
+    . leg_put_nevts [bool] to print events yields in the legend (default: True)
     . leg_textsize [float] size of the legend text (~0.030 to ~0.045)
 
+    HISTO properties
+    ----------------
     . m_size [float] is the marker size for data
     . error_fill [int] is the filling style for the uncertainty band
     . error_alpha [float] is the transparency for the uncertainty band (in [0,1])
     . histo_border [int] is the border size of background histograms in the stacks
 
+    LABELS properties
+    -----------------
     . plot_labels [list of string] given the labels printed below ATLAS and Lumi
     . atlas_label [string] is \'Internal\' by default but can be \'ATLAS\', \'Preliminary\', \'Simulation\'
+    . lumi [float] is the integrated luminosity (default: 1/fb)
 
+    CANVAS properties
+    -----------------
     . canvas [TCanvas] on which the plot will be made
     . can_ratio [float] specify the canvas size such as width=900/ratio and height=800
     . can_scale [float] scale the whole canvas without changin its ratio

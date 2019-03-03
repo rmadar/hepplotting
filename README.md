@@ -99,8 +99,8 @@ which is often required during the approval process of a publication.
 
 ### 3.1 To-do list
 
-- [ ] Add the possibility of having several legends with the position/number
-if entry for each
+- [x] Add the possibility of having several legends with the position/number
+if entry for each: done via `leg.SetNcolumns(ncols)` method;
 - [ ] Add sanity checks for the number of bins of each histograms and the
 size of the `bin_label` list
 
