@@ -138,6 +138,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     . xlabel_offset [float] offset of the x-axis bin labels
     . xticksInt [bool] keep only integer values for x-axis ticks
     . xmin [float] lower x-axis value
+    . xmax [float] lower x-axis value
     . ymin [float] lower y-axis value
     . ymax [float] higher y-axis value
     . r_ymin [float] lower y-axis value on the ratio plot
@@ -149,7 +150,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
      and top right (x2,y2) using [x1,y1,x2,y2]
     . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
     . leg_ncols [int] number of columns used for the legend
-    . leg_put_nevts [bool] to print events yields in the legend (default: True)
+    . leg_put_nevts [bool] to print events yields in the legend (default: False)
     . leg_textsize [float] size of the legend text (~0.030 to ~0.045)
 
     HISTO properties
@@ -175,12 +176,12 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     '''
 
     plotdir, dictSig, sig_line_style, xtitle_arg, ytitle_arg = 'plots', None, 1, None, None
-    ymin_arg, ymax_arg, xmin_arg, leg_pos, lumi = None, None, None, None, 1.0
+    ymin_arg, ymax_arg, xmin_arg, xmax_arg, leg_pos, lumi = None, None, None, None, None, 1.0
     is_logy, bin_label, xlabel_size, xlabel_offset, xticksInt = None, None, None, None, False
     r_ymin, r_ymax, can_ratio, can_scale, m_size = None, None, None, 1.0, None
     canvas, error_fill, error_alpha, histo_border, plot_labels = None, 3356, 0.3, 0, None
     plot_ratio, atlas_label, unc_leg, ratio_type = True, 'Internal', 'Total bkg w/ unc.', 'ratio'
-    leg_with_nevts, leg_ncols, leg_textsize = True, 1, None
+    leg_with_nevts, leg_ncols, leg_textsize = False, 1, None
     if 'lumi' in kwargs:
         lumi = kwargs['lumi']
     if 'dictSig' in kwargs:
@@ -207,6 +208,8 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         xticksInt = kwargs['xticksInt']
     if 'xmin' in kwargs:
         xmin_arg = kwargs['xmin']
+    if 'xmax' in kwargs:
+        xmax_arg = kwargs['xmax']
     if 'ymin' in kwargs:
         ymin_arg = kwargs['ymin']
     if 'ymax' in kwargs:
@@ -307,6 +310,10 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         xmin = xmin_arg
     else:
         xmin = hData.GetBinLowEdge(1)
+    if xmax_arg:
+        xmax = xmax_arg
+    else:
+        xmax = hData.GetBinLowEdge(nbins)+hData.GetBinWidth(nbins)
 
     if ymax_arg:
         ymax = ymax_arg
