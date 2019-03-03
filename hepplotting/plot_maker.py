@@ -113,13 +113,17 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     '''
     Produce a canvas with stacked histogram for background, data and ratio plots.
 
-    - Required arguments:
+
+    Required arguments
+    ==================
     . dictBkg [dictionnary {bkgName:[TH1,color,legName]}] containing all background histograms
     . hTot [TH1] is the histogram of the total data with its uncertainty
     . hData [TH1] is the histogram of data
     . plot_name [string] is the name of the final plot (plot_name.pdf)
 
-    - Key-word arguments:
+
+    Key-word arguments
+    ==================
     . plotdir [string] is a directory where the plots will be stored (default: 'plots')
     . lumi [float] is the integrated luminosity (default: 1/fb)
     . xtitle [string] is x-axis title
@@ -136,20 +140,27 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     . ymax [float] higher y-axis value
     . r_ymin [float] lower y-axis value on the ratio plot
     . r_ymax [float] higher y-axis value on the ratio plot
-    . canvas [TCanvas] on which the plot will be made
-    . can_ratio [float] specify the canvas size such as width=900/ratio and height=800
-    . can_scale [float] scale the whole canvas without changin its ratio
+
     . leg_pos [list of float] specify the legend position via bottom left (x1,y1)
      and top right (x2,y2) using [x1,y1,x2,y2]
+    . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
+    . leg_ncols [int] number of columns used for the legend
+    . leg_put_nevts [bool] to print events yields in the legend
+    . leg_textsize [float] size of the legend text (~0.030 to ~0.045)
+
     . m_size [float] is the marker size for data
-    . plot_labels [list of string] given the labels printed below ATLAS and Lumi
-    . atlas_label [string] is \'Internal\' by default but can be \'ATLAS\', \'Preliminary\', \'Simulation\'
     . error_fill [int] is the filling style for the uncertainty band
     . error_alpha [float] is the transparency for the uncertainty band (in [0,1])
     . histo_border [int] is the border size of background histograms in the stacks
+
+    . plot_labels [list of string] given the labels printed below ATLAS and Lumi
+    . atlas_label [string] is \'Internal\' by default but can be \'ATLAS\', \'Preliminary\', \'Simulation\'
+
+    . canvas [TCanvas] on which the plot will be made
+    . can_ratio [float] specify the canvas size such as width=900/ratio and height=800
+    . can_scale [float] scale the whole canvas without changin its ratio
     . plot_ratio [boolean] to plot or not the ratio panel
     . ratio_type [string] to choose what to plot in the bottom plot (\'ratio\' [default], \'SoverB\', \'signif\')
-    . unc_leg [string] to tune the name of uncertainty (eg. stat-only)
     '''
 
     plotdir, dictSig, sig_line_style, xtitle_arg, ytitle_arg = 'plots', None, 1, None, None
@@ -157,7 +168,8 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     is_logy, bin_label, xlabel_size, xlabel_offset, xticksInt = None, None, None, None, False
     r_ymin, r_ymax, can_ratio, can_scale, m_size = None, None, None, 1.0, None
     canvas, error_fill, error_alpha, histo_border, plot_labels = None, 3356, 0.3, 0, None
-    plot_ratio, atlas_label, unc_leg, ratio_type = True, 'Internal', None, 'ratio'
+    plot_ratio, atlas_label, unc_leg, ratio_type = True, 'Internal', 'Total bkg w/ unc.', 'ratio'
+    leg_with_nevts, leg_ncols, leg_textsize = True, 1, None
     if 'lumi' in kwargs:
         lumi = kwargs['lumi']
     if 'dictSig' in kwargs:
@@ -200,6 +212,14 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         can_scale = kwargs['can_scale']
     if 'leg_pos' in kwargs:
         leg_pos = kwargs['leg_pos']
+    if 'leg_ncols' in kwargs:
+        leg_ncols = kwargs['leg_ncols']
+    if 'leg_with_nevts' in kwargs:
+        leg_with_nevts = kwargs['leg_with_nevts']
+    if 'leg_textsize' in kwargs:
+        leg_textsize = kwargs['leg_textsize']
+    if 'unc_leg' in kwargs:
+        unc_leg = kwargs['unc_leg']
     if 'm_size' in kwargs:
         m_size = kwargs['m_size']
     if 'plot_labels' in kwargs:
@@ -214,8 +234,6 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         histo_border = kwargs['histo_border']
     if 'plot_ratio' in kwargs:
         plot_ratio = kwargs['plot_ratio']
-    if 'unc_leg' in kwargs:
-        unc_leg = kwargs['unc_leg']
     if 'ratio_type' in kwargs:
         ratio_type = kwargs['ratio_type']
 
@@ -338,28 +356,47 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     padhigh.cd()
     if plot_ratio:
         x1, y1, x2, y2, textsize = 0.61, 0.3, 0.92, 0.90, 0.045
+        if leg_ncols==2:
+            x1, y1, x2, y2 = 0.43, 0.55, 0.94, 0.90
     else:
         x1, y1, x2, y2, textsize = 0.61, 0.5, 0.98, 0.93, 0.038
+        if leg_ncols==2:
+            x1, y1, x2, y2, textsize = 0.48, 0.65, 0.94, 0.93, 0.034
     if leg_pos:
         x1, y1, x2, y2 = leg_pos
+    if leg_with_nevts:
+        textsize = 0.03
+    if leg_textsize:
+        textsize = leg_textsize
+
+    def make_leg_name(histo, name):
+        if leg_with_nevts:
+            Etot = ROOT.Double(0.0)
+            Ntot = histo.IntegralAndError(-999, 999, Etot)
+            if name in ('Data', 'data', 'DATA'):
+                return '{} ({:.0f})'.format(name, Ntot)
+            else:
+                return '{} ({:.0f} #pm {:.0f})'.format(name, Ntot, Etot)
+        else:
+            return name
+
     leg = ROOT.TLegend(x1, y1, x2, y2)
     ROOT.SetOwnership(leg, False)
+    leg.SetNColumns(leg_ncols)
     leg.SetTextFont(42)
     leg.SetFillStyle(0)
     leg.SetBorderSize(0)
     leg.SetLineColor(0)
     leg.SetTextSize(textsize)
-    leg.AddEntry(hData, 'Data', 'lp')
+    leg.AddEntry(hData, make_leg_name(hData, 'Data') , 'lp')
     for b in bkg_name:
-        leg.AddEntry(hBkg[b], bkg_legname[b], 'f')
+        leg.AddEntry(hBkg[b], make_leg_name(hBkg[b], bkg_legname[b]), 'f')
     if dictSig:
         for n, sig in dictSig.items():
+            leg.AddEntry(h, make_leg_name(h, legName), 'l')
             h, color, norm, legName = sig
-            leg.AddEntry(h, legName, 'l')
-    if unc_leg:
-        leg.AddEntry(hTot, unc_leg, 'f')
-    else:
-        leg.AddEntry(hTot, 'Total bkg unc.', 'f')
+    leg.AddEntry(hTot, make_leg_name(hTot, unc_leg), 'f')
+
 
     hData.SetMarkerStyle(20)
     if plot_ratio:

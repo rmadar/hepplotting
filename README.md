@@ -36,7 +36,7 @@ where:
 A concrete example can be found in [this notebook](example/example.ipynb) or [this simple script](example/example.py)
 which produce each this plot:
 
-![Example of distribution](example/plots/Example_plot_Internal_reduced.png)
+![Example of distribution](example/plots/Example_plot_Internal.png)
 
 
 ### 2.3 Description of the options
@@ -74,7 +74,9 @@ which is often required during the approval process of a publication.
 
    + `leg_pos` *[list of float]* specify the legend position via bottom left (x1,y1) and top right (x2,y2) using `[x1,y1,x2,y2]`
    + `unc_leg` *[string]* to tune the name of uncertainty (eg. `stat-only` or `Stat #oplus Norm Syst.`)
-
+   + `leg_ncols` *[int]* number of columns used for the legend
+   + `leg_put_nevts` *[bool]* to print events yields in the legend
+   + `leg_textsize` *[float]* size of the legend text (~0.030 to ~0.045)
 
 **Canvas properties**
 
