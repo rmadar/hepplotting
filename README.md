@@ -60,6 +60,7 @@ which is often required during the approval process of a publication.
    + `xtitle` *[string]* is x-axis title
    + `ytitle` *[string]* is y-axis title
    + `xmin` *[float]* lower x-axis value
+   + `xmax` *[float]* higher x-axis value
    + `ymin` *[float]* lower y-axis value
    + `ymax` *[float]* higher y-axis value
    + `r_ymin` *[float]* lower y-axis value on the ratio plot
