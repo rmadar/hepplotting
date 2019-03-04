@@ -71,7 +71,7 @@ which is often required during the approval process of a publication.
    + `xlabel_offset` *[float]* offset of the x-axis bin labels
 
 
-**Legend propetries**
+**Legend properties**
 
    + `leg_pos` *[list of float]* specify the legend position via bottom left (x1,y1) and top right (x2,y2) using `[x1,y1,x2,y2]`
    + `unc_leg` *[string]* to tune the name of uncertainty (eg. `stat-only` or `Stat #oplus Norm Syst.`)
