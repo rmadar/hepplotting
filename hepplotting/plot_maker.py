@@ -116,7 +116,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
 
     Required arguments
     ==================
-    . dictBkg [dictionnary {bkgName:[TH1,color,legName]}] containing all background histograms
+    . dictBkg [dictionnary {bkgName: [TH1, color, legName]}] containing all background histograms
     . hTot [TH1] is the histogram of the total data with its uncertainty
     . hData [TH1] is the histogram of data
     . plot_name [string] is the name of the final plot (plot_name.pdf)
@@ -130,7 +130,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     ---------------
     . xtitle [string] is x-axis title
     . ytitle [string] is y-axis title
-    . dictSig [dict {sigName:[TH1,color,norm,legName]}] is dictionnary with name [string], histo [TH1],
+    . dictSig [dict {sigName: [TH1, color, norm, legName]}] is dictionnary with name [string], histo [TH1],
      color [int], norm [float] and legName [string] of several signals
     . is_logy [boolean] to plot in log scale or not
     . bin_label [list of string] to name bins (e.g plots with one region yield per bin)
@@ -181,7 +181,7 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
     r_ymin, r_ymax, can_ratio, can_scale, m_size = None, None, None, 1.0, None
     canvas, error_fill, error_alpha, histo_border, plot_labels = None, 3356, 0.3, 0, None
     plot_ratio, atlas_label, unc_leg, ratio_type = True, 'Internal', 'Total bkg w/ unc.', 'ratio'
-    leg_with_nevts, leg_ncols, leg_textsize = False, 1, None
+    leg_put_nevts, leg_ncols, leg_textsize = False, 1, None
     if 'lumi' in kwargs:
         lumi = kwargs['lumi']
     if 'dictSig' in kwargs:
