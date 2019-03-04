@@ -40,4 +40,4 @@ plt.make_nice_canvas(dictBkg,hTot,hData,plot_name='Example_plot', dictSig=dictSi
                      ytitle='Probability Density Function',
                      xtitle='Random variable', plot_ratio=True,
                      ymax=300, ratio_type='signif',
-                     leg_ncols=1, leg_with_nevts=True, leg_textsize=0.036)
+                     leg_ncols=1, leg_put_nevts=True, leg_textsize=0.036)

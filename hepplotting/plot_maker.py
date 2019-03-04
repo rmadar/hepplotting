@@ -228,8 +228,8 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         leg_pos = kwargs['leg_pos']
     if 'leg_ncols' in kwargs:
         leg_ncols = kwargs['leg_ncols']
-    if 'leg_with_nevts' in kwargs:
-        leg_with_nevts = kwargs['leg_with_nevts']
+    if 'leg_put_nevts' in kwargs:
+        leg_put_nevts = kwargs['leg_put_nevts']
     if 'leg_textsize' in kwargs:
         leg_textsize = kwargs['leg_textsize']
     if 'unc_leg' in kwargs:
@@ -382,13 +382,13 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
             x1, y1, x2, y2, textsize = 0.48, 0.65, 0.94, 0.93, 0.034
     if leg_pos:
         x1, y1, x2, y2 = leg_pos
-    if leg_with_nevts:
+    if leg_put_nevts:
         textsize = 0.03
     if leg_textsize:
         textsize = leg_textsize
 
     def make_leg_name(histo, name):
-        if leg_with_nevts:
+        if leg_put_nevts:
             Etot = ROOT.Double(0.0)
             Ntot = histo.IntegralAndError(-999, 999, Etot)
             if name in ('Data', 'data', 'DATA'):
