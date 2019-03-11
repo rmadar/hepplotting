@@ -391,10 +391,13 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         if leg_put_nevts:
             Etot = ROOT.Double(0.0)
             Ntot = histo.IntegralAndError(-999, 999, Etot)
+            str_template = '{} ({:.0f} #pm {:.0f})'
+            if Ntot<100:
+                str_template = '{} ({:.1f} #pm {:.1f})'
             if name in ('Data', 'data', 'DATA'):
                 return '{} ({:.0f})'.format(name, Ntot)
             else:
-                return '{} ({:.0f} #pm {:.0f})'.format(name, Ntot, Etot)
+                return str_template.format(name, Ntot, Etot)
         else:
             return name
 
@@ -411,8 +414,8 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
         leg.AddEntry(hBkg[b], make_leg_name(hBkg[b], bkg_legname[b]), 'f')
     if dictSig:
         for n, sig in dictSig.items():
-            leg.AddEntry(h, make_leg_name(h, legName), 'l')
             h, color, norm, legName = sig
+            leg.AddEntry(h, make_leg_name(h, legName), 'l')
     leg.AddEntry(hTot, make_leg_name(hTot, unc_leg), 'f')
 
 
