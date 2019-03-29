@@ -51,6 +51,7 @@ def sum_histograms(hBkg, name='tot'):
     for i, h in enumerate(hBkg):
         if i == 0:
             hTot = h.Clone(h.GetName()+'_'+name)
+            ROOT.SetOwnership(hTot, False)
         else:
             hTot.Add(h)
     return hTot.Clone(name)
@@ -65,6 +66,7 @@ def add_flat_syst(h, s=0, name='wsyst'):
     . TH1 with the inflated error (stat ++ syst)
     '''
     hres = h.Clone(h.GetName()+'_'+name)
+    ROOT.SetOwnership(hres, False)
     if s == 0:
         return hres
     else:
