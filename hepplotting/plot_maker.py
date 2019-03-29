@@ -505,7 +505,10 @@ def make_nice_canvas(dictBkg, hTot, hData, plot_name, **kwargs):
                 berr2 = berr**2
                 if ratio_type == 'SoverB':
                     hmc_err.GetYaxis().SetTitle('S/#sqrt{B}')
-                    SoverB = s/np.sqrt(b+berr**2)
+                    if b+berr**2 > 0:
+                        SoverB = s/np.sqrt(b+berr**2)
+                    else:
+                        SoverB = 0
                     if np.isnan(SoverB) or np.isinf(SoverB):
                         hmc_err.SetBinContent(ii, 0.0)
                     else:
